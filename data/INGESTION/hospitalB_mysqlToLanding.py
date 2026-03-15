@@ -116,6 +116,27 @@ def get_latest_watermark(table_name):
 
 ##------------------------------------------------------------------------------------------------------------------##
 
+def get_record_count(table, load_type, watermark_col, last_watermark):
+    """
+    Get row count directly from MySQL via a lightweight COUNT(*) query.
+    Avoids df.cache() + df.count() which causes OOM on small clusters.
+    """
+    if load_type.lower() == "full":
+        count_query = f"(SELECT COUNT(*) AS cnt FROM {table}) AS t"
+    else:
+        count_query = f"(SELECT COUNT(*) AS cnt FROM {table} WHERE {watermark_col} > '{last_watermark}') AS t"
+
+    count_df = (spark.read.format("jdbc")
+        .option("url", MYSQL_CONFIG["url"])
+        .option("user", MYSQL_CONFIG["user"])
+        .option("password", MYSQL_CONFIG["password"])
+        .option("driver", MYSQL_CONFIG["driver"])
+        .option("dbtable", count_query)
+        .load())
+    return count_df.collect()[0][0]
+
+##------------------------------------------------------------------------------------------------------------------##
+
 def write_df_to_gcs_as_single_json(df, table):
     """
     Write Spark DataFrame to GCS as a single JSON file without using toPandas().
@@ -171,14 +192,11 @@ def extract_and_save_to_landing(table, load_type, watermark_col):
 
         log_event("SUCCESS", f"✅ Successfully extracted data from {table}", table=table)
 
-        # Cache df so count() and the write both use the same in-memory data
-        df.cache()
-        record_count = df.count()
+        # Get count via lightweight MySQL COUNT(*) — avoids OOM from df.cache() on small cluster
+        record_count = get_record_count(table, load_type, watermark_col, last_watermark)
 
-        # Write directly from Spark workers to GCS — avoids OOM on driver
+        # Write directly from Spark workers to GCS — no driver memory used
         final_path = write_df_to_gcs_as_single_json(df, table)
-
-        df.unpersist()
 
         log_event("SUCCESS", f"✅ JSON file successfully written to {final_path}", table=table)
 

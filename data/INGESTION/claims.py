@@ -17,14 +17,14 @@ claims_df = spark.read.csv(CLAIMS_BUCKET_PATH, header=True)
 
 # adding hospital source for future reference
 claims_df = (claims_df
-                .withColumn("datasource", 
+                .withColumn("datasource",
                               when(input_file_name().contains("hospital2"), "hosb")
                              .when(input_file_name().contains("hospital1"), "hosa").otherwise("None")))
 
-# dropping dupplicates if any
-claims_df = claims_df.dropDuplicates()
+# dropping duplicates if any — repartition first so dedup work is spread across executors
+claims_df = claims_df.repartition(4).dropDuplicates()
 
-# write to bigquery
+# write to bigquery — distributed across executors, no data collected on driver
 (claims_df.write
             .format("bigquery")
             .option("table", BQ_TABLE)
