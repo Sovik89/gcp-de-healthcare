@@ -9,7 +9,7 @@ from pyspark.sql import SparkSession
 current_date = date.today()
 
 # Initialize Spark session
-spark = SparkSession.builder.appName("NPI Data").getOrCreate()
+spark = SparkSession.builder.appName("NPI Data2").getOrCreate()
 
 # Base URL for the NPI Registry API
 base_url = "https://npiregistry.cms.hhs.gov/api/"
