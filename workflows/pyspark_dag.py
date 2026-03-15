@@ -19,28 +19,57 @@ GCS_JOB_FILE_1 = f"gs://{COMPOSER_BUCKET}/data/INGESTION/hospitalA_mysqlToLandin
 PYSPARK_JOB_1 = {
     "reference": {"project_id": PROJECT_ID},
     "placement": {"cluster_name": CLUSTER_NAME},
-    "pyspark_job": {"main_python_file_uri": GCS_JOB_FILE_1},
+    "pyspark_job": {"main_python_file_uri": GCS_JOB_FILE_1,
+                    "properties": {
+                        "spark.driver.memory": "4g",
+                        "spark.executor.memory": "4g",
+                        "spark.executor.cores": "2",
+                        "spark.memory.fraction": "0.8",
+                    }
+                    },
+    
 }
 
 GCS_JOB_FILE_2 = f"gs://{COMPOSER_BUCKET}/data/INGESTION/hospitalB_mysqlToLanding.py"
 PYSPARK_JOB_2 = {
     "reference": {"project_id": PROJECT_ID},
     "placement": {"cluster_name": CLUSTER_NAME},
-    "pyspark_job": {"main_python_file_uri": GCS_JOB_FILE_2},
+    "pyspark_job": {"main_python_file_uri": GCS_JOB_FILE_2,
+                    "properties": {
+                        "spark.driver.memory": "4g",
+                        "spark.executor.memory": "4g",
+                        "spark.executor.cores": "2",
+                        "spark.memory.fraction": "0.8",
+                    }
+                    },
 }
 
 GCS_JOB_FILE_3 = f"gs://{COMPOSER_BUCKET}/data/INGESTION/claims.py"
 PYSPARK_JOB_3 = {
     "reference": {"project_id": PROJECT_ID},
     "placement": {"cluster_name": CLUSTER_NAME},
-    "pyspark_job": {"main_python_file_uri": GCS_JOB_FILE_3},
+    "pyspark_job": {"main_python_file_uri": GCS_JOB_FILE_3,
+                    "properties": {
+                        "spark.driver.memory": "4g",
+                        "spark.executor.memory": "4g",
+                        "spark.executor.cores": "2",
+                        "spark.memory.fraction": "0.8",
+                    }
+                    },
 }
 
 GCS_JOB_FILE_4 = f"gs://{COMPOSER_BUCKET}/data/INGESTION/cpt_codes.py"
 PYSPARK_JOB_4 = {
     "reference": {"project_id": PROJECT_ID},
     "placement": {"cluster_name": CLUSTER_NAME},
-    "pyspark_job": {"main_python_file_uri": GCS_JOB_FILE_4},
+    "pyspark_job": {"main_python_file_uri": GCS_JOB_FILE_4,
+                    "properties": {
+                        "spark.driver.memory": "4g",
+                        "spark.executor.memory": "4g",
+                        "spark.executor.cores": "2",
+                        "spark.memory.fraction": "0.8",
+                    }
+                    },
 }
 
 
