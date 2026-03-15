@@ -9,27 +9,27 @@ storage_client = storage.Client()
 bq_client = bigquery.Client()
 
 # Initialize Spark Session
-spark = SparkSession.builder.appName("HospitalAMySQLToLanding").getOrCreate()
+spark = SparkSession.builder.appName("HospitalBMySQLToLanding").getOrCreate()
 
 # Google Cloud Storage (GCS) Configuration
-GCS_BUCKET = "healthcare-bucket-22032025"
+GCS_BUCKET = "healthcare-bucket-15032026"
 HOSPITAL_NAME = "hospital-b"
 LANDING_PATH = f"gs://{GCS_BUCKET}/landing/{HOSPITAL_NAME}/"
 ARCHIVE_PATH = f"gs://{GCS_BUCKET}/landing/{HOSPITAL_NAME}/archive/"
 CONFIG_FILE_PATH = f"gs://{GCS_BUCKET}/configs/load_config.csv"
 
 # BigQuery Configuration
-BQ_PROJECT = "avd-databricks-demo"
+BQ_PROJECT = "gcp-sovik-de-1"
 BQ_AUDIT_TABLE = f"{BQ_PROJECT}.temp_dataset.audit_log"
 BQ_LOG_TABLE = f"{BQ_PROJECT}.temp_dataset.pipeline_logs"
 BQ_TEMP_PATH = f"{GCS_BUCKET}/temp/"  
 
 # MySQL Configuration
 MYSQL_CONFIG = {
-    "url": "jdbc:mysql://34.59.188.6:3306/hospital_b_db?useSSL=false&allowPublicKeyRetrieval=true",
+    "url": "jdbc:mysql://35.239.113.1:3306/hospital_b_db?useSSL=true&allowPublicKeyRetrieval=true",
     "driver": "com.mysql.cj.jdbc.Driver",
     "user": "myuser",
-    "password": "mypass"
+    "password": "Pass@12345"
 }
 
 ##------------------------------------------------------------------------------------------------------------------##
